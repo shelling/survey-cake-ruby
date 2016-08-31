@@ -2,10 +2,10 @@ require "rest-client"
 require "digest"
 
 class SurveyCake
-  attr_accessor :key, :secret, :sole, :timestamp
+  attr_accessor :key, :secret, :sole, :timestamp, :action
 
-  def initialize(key, secret, sole)
-    @key, @secret, @sole, @timestamp = key, secret, sole, Time.now
+  def initialize(key, secret, sole, action)
+    @key, @secret, @sole, @timestamp, @action = key, secret, sole, Time.now, action
   end
   
   def tmp
@@ -27,13 +27,13 @@ class SurveyCake
   end
 
   def string2
-    string2 = Digest::MD5.hexdigest(@sole   + tmp)
+    string2 = Digest::MD5.hexdigest(@sole + tmp)
     string2[y.to_i] = y
     string2
   end
 
   def string3
-    string3 = Digest::MD5.hexdigest(@key    + tmp)
+    string3 = Digest::MD5.hexdigest(@key + @action + tmp)
     string3[x.to_i + y.to_i] = x
     string3
   end
@@ -53,7 +53,7 @@ class SurveyCake
   end
 end
 
-surveycake = SurveyCake.new("key", "secret", "sole")
+surveycake = SurveyCake.new(key, secret, sole, action)
 
 puts surveycake.key
 puts surveycake.secret
